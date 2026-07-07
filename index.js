@@ -36,15 +36,19 @@ async function processPrompt(userPrompt) {
             // calling open ai sdk
             openaiClient.responses.create({
                 model: "gpt-4o-mini",
-                input: userPrompt
+                input: userPrompt,
+                max_completion_tokens: 150
             }).then((res) => {
-                return res.output_text; 
+                return res.output_text;
             }),
 
             // Calling gemini sdk
             geminiClient.models.generateContent({
-                model: "gemini-2.5-flash", 
-                contents: userPrompt
+                model: "gemini-2.5-flash",
+                contents: userPrompt,
+                config: {
+                    maxOutputTokens: 150
+                }
             }).then((res) => {
                 return res.text;
             }),
@@ -92,7 +96,8 @@ async function processPrompt(userPrompt) {
                     schema: EvaluationJsonSchema
                 }
             },
-            temperature: 0.2
+            temperature: 0.2,
+            max_completion_tokens: 300
         });
 
         const evaluationResult = JSON.parse(response.output_text);
